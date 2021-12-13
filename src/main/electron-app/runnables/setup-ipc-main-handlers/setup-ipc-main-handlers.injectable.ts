@@ -9,7 +9,6 @@ import clusterManagerInjectable from "../../../cluster/manager.injectable";
 import clusterStoreInjectable from "../../../../common/cluster-store/cluster-store.injectable";
 import { onLoadOfApplicationInjectionToken } from "../../../start-main-application/runnable-tokens/on-load-of-application-injection-token";
 import operatingSystemThemeInjectable from "../../../theme/operating-system-theme.injectable";
-import catalogEntityRegistryInjectable from "../../../catalog/entity-registry.injectable";
 import askUserForFilePathsInjectable from "../../../ipc/ask-user-for-file-paths.injectable";
 import applicationMenuItemCompositeInjectable from "../../../../features/application-menu/main/application-menu-item-composite.injectable";
 import emitAppEventInjectable from "../../../../common/app-event-bus/emit-event.injectable";
@@ -22,7 +21,6 @@ const setupIpcMainHandlersInjectable = getInjectable({
     const logger = di.inject(loggerInjectable);
     const clusterManager = di.inject(clusterManagerInjectable);
     const applicationMenuItemComposite = di.inject(applicationMenuItemCompositeInjectable);
-    const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
     const clusterStore = di.inject(clusterStoreInjectable);
     const operatingSystemTheme = di.inject(operatingSystemThemeInjectable);
     const askUserForFilePaths = di.inject(askUserForFilePathsInjectable);
@@ -37,7 +35,6 @@ const setupIpcMainHandlersInjectable = getInjectable({
         setupIpcMainHandlers({
           applicationMenuItemComposite,
           clusterManager,
-          catalogEntityRegistry,
           clusterStore,
           operatingSystemTheme,
           askUserForFilePaths,

@@ -9,8 +9,6 @@ import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHand
 import type { ClusterId } from "../../../../common/cluster-types";
 import { ClusterStore } from "../../../../common/cluster-store/cluster-store";
 import { broadcastMainChannel, broadcastMessage, ipcMainHandle, ipcMainOn } from "../../../../common/ipc";
-import type { CatalogEntityRegistry } from "../../../catalog";
-import { pushCatalogToRenderer } from "../../../catalog-pusher";
 import type { ClusterManager } from "../../../cluster/manager";
 import type { IComputedValue } from "mobx";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel } from "../../../../common/ipc/window";
@@ -29,7 +27,6 @@ import type { CreateResourceApplier } from "../../../resource-applier/create-res
 interface Dependencies {
   applicationMenuItemComposite: IComputedValue<Composite<ApplicationMenuItemTypes | MenuItemRoot>>;
   clusterManager: ClusterManager;
-  catalogEntityRegistry: CatalogEntityRegistry;
   clusterStore: ClusterStore;
   operatingSystemTheme: IComputedValue<Theme>;
   askUserForFilePaths: AskUserForFilePaths;
@@ -40,7 +37,6 @@ interface Dependencies {
 export const setupIpcMainHandlers = ({
   applicationMenuItemComposite,
   clusterManager,
-  catalogEntityRegistry,
   clusterStore,
   operatingSystemTheme,
   askUserForFilePaths,
@@ -59,8 +55,6 @@ export const setupIpcMainHandlers = ({
     if (cluster) {
       clusterFrameMap.set(cluster.id, { frameId: event.frameId, processId: event.processId });
       cluster.pushState();
-
-      pushCatalogToRenderer(catalogEntityRegistry);
     }
   });
 
