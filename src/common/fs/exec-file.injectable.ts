@@ -14,8 +14,8 @@ export interface ExecFile {
 const execFileInjectable = getInjectable({
   id: "exec-file",
 
-  instantiate: (): ExecFile => (filePath, args, options) => new Promise((resolve) => {
-    execFile(filePath, args, options ?? {}, (error, stdout, stderr) => {
+  instantiate: (): ExecFile => (filePath, args, options = {}) => new Promise((resolve) => {
+    execFile(filePath, args, options, (error, stdout, stderr) => {
       if (error) {
         resolve({
           callWasSuccessful: false,
