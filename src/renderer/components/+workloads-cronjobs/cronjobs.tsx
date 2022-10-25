@@ -13,11 +13,9 @@ import moment from "moment";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
 import type { CronJobStore } from "./store";
-import type { JobStore } from "../+workloads-jobs/store";
 import type { EventStore } from "../+events/store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import cronJobStoreInjectable from "./store.injectable";
-import jobStoreInjectable from "../+workloads-jobs/store.injectable";
 import eventStoreInjectable from "../+events/store.injectable";
 
 enum columnId {
@@ -32,7 +30,6 @@ enum columnId {
 
 interface Dependencies {
   cronJobStore: CronJobStore;
-  jobStore: JobStore;
   eventStore: EventStore;
 }
 
@@ -42,7 +39,6 @@ class NonInjectedCronJobs extends React.Component<Dependencies>{
     const {
       cronJobStore,
       eventStore,
-      jobStore,
     } = this.props;
 
     return (
@@ -52,7 +48,7 @@ class NonInjectedCronJobs extends React.Component<Dependencies>{
           tableId="workload_cronjobs"
           className="CronJobs"
           store={cronJobStore}
-          dependentStores={[jobStore, eventStore]}
+          dependentStores={[eventStore]}
           sortingCallbacks={{
             [columnId.name]: cronJob => cronJob.getName(),
             [columnId.namespace]: cronJob => cronJob.getNs(),
@@ -100,7 +96,6 @@ export const CronJobs = withInjectables<Dependencies>(NonInjectedCronJobs, {
   getProps: (di, props) => ({
     cronJobStore: di.inject(cronJobStoreInjectable),
     eventStore: di.inject(eventStoreInjectable),
-    jobStore: di.inject(jobStoreInjectable),
     ...props,
   }),
 });
