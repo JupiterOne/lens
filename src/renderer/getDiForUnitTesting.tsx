@@ -10,7 +10,6 @@ import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as
 import requestFromChannelInjectable from "./utils/channel/request-from-channel.injectable";
 import loggerInjectable from "../common/logger.injectable";
 import { overrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
-import { createMemoryHistory } from "history";
 import focusWindowInjectable from "./navigation/focus-window.injectable";
 import extensionsStoreInjectable from "../extensions/extensions-store/extensions-store.injectable";
 import type { ExtensionsStore } from "../extensions/extensions-store/extensions-store";
@@ -21,7 +20,6 @@ import type { UserStore } from "../common/user-store";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-spawning-pool.injectable";
 import hostedClusterIdInjectable from "./cluster-frame-context/hosted-cluster-id.injectable";
-import historyInjectable from "./navigation/history.injectable";
 import { ApiManager } from "../common/k8s-api/api-manager";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
@@ -106,7 +104,6 @@ export const getDiForUnitTesting = (
     di.override(terminalSpawningPoolInjectable, () => document.createElement("div"));
     di.override(hostedClusterIdInjectable, () => undefined);
 
-    di.override(historyInjectable, () => createMemoryHistory());
     di.override(legacyOnChannelListenInjectable, () => () => noop);
 
     di.override(storageSaveDelayInjectable, () => 0);

@@ -3,6 +3,9 @@
 exports[`preferences - navigation to editor preferences given in preferences, when rendered renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -692,6 +695,9 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
 exports[`preferences - navigation to editor preferences given in preferences, when rendered when navigating to editor preferences using navigation renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -1122,7 +1128,7 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
                         min="10"
                         spellcheck="false"
                         type="number"
-                        value="42"
+                        value="12"
                       />
                     </label>
                     <div
@@ -1155,7 +1161,7 @@ exports[`preferences - navigation to editor preferences given in preferences, wh
                         class="input box grow"
                         spellcheck="false"
                         type="text"
-                        value=""
+                        value="RobotoMono"
                       />
                     </label>
                     <div

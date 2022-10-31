@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { Mutable } from "type-fest";
+import type { Writable } from "type-fest";
 import fileSystemProvisionerStoreInjectable from "../../../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
 import { lensExtensionDependencies } from "../../../extensions/lens-extension";
 import { LensMainExtension } from "../../../extensions/lens-main-extension";
@@ -45,10 +45,8 @@ export const getExtensionFakeForMain = (di: DiContainer, id: string, name: strin
 
   Object.assign(instance, options);
 
-  (instance as Mutable<LensMainExtension>)[lensExtensionDependencies] = {
-    fileSystemProvisionerStore: di.inject(
-      fileSystemProvisionerStoreInjectable,
-    ),
+  (instance as Writable<LensMainExtension>)[lensExtensionDependencies] = {
+    fileSystemProvisionerStore: di.inject(fileSystemProvisionerStoreInjectable),
     entityRegistry: di.inject(catalogEntityRegistryForMainInjectable),
     navigate: di.inject(navigateForExtensionInjectable),
   };
@@ -75,7 +73,7 @@ export const getExtensionFakeForRenderer = (di: DiContainer, id: string, name: s
 
   Object.assign(instance, options);
 
-  (instance as Mutable<LensRendererExtension>)[lensExtensionDependencies] = {
+  (instance as Writable<LensRendererExtension>)[lensExtensionDependencies] = {
     categoryRegistry: di.inject(catalogCategoryRegistryInjectable),
     entityRegistry: di.inject(catalogEntityRegistryForRendererInjectable),
     fileSystemProvisionerStore: di.inject(fileSystemProvisionerStoreInjectable),

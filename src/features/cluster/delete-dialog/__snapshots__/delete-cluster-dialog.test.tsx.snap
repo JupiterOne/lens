@@ -4,6 +4,9 @@ exports[`Deleting a cluster when an internal kubeconfig cluster is used when the
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -408,6 +411,9 @@ exports[`Deleting a cluster when an internal kubeconfig cluster is used when the
 exports[`Deleting a cluster when the kubeconfig has multiple clusters when the dialog is opened for not the current cluster renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >
@@ -846,6 +852,9 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
 exports[`Deleting a cluster when the kubeconfig has multiple clusters when the dialog is opened for not the current cluster when context switching checkbox is clicked renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >
@@ -1364,6 +1373,9 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1880,6 +1892,9 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
 exports[`Deleting a cluster when the kubeconfig has only one cluster when the dialog is opened renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >

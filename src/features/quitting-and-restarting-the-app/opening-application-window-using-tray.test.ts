@@ -14,6 +14,7 @@ import type { CreateElectronWindow } from "../../main/start-main-application/len
 import createElectronWindowInjectable from "../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
 import splashWindowInjectable from "../../main/start-main-application/lens-window/splash-window/splash-window.injectable";
 import { runInAction } from "mobx";
+import { matches } from "jest-mock-extended";
 
 describe("opening application window using tray", () => {
   describe("given application has started", () => {
@@ -136,7 +137,7 @@ describe("opening application window using tray", () => {
           });
 
           it("starts loading of content for the application window", () => {
-            expect(callForApplicationWindowHtmlMock).toHaveBeenCalledWith("http://localhost:42");
+            expect(callForApplicationWindowHtmlMock).toHaveBeenCalledWith(matches((val) => val.startsWith("http://localhost:")));
           });
 
           describe("given static HTML of application window has not resolved yet, when opening from tray again", () => {

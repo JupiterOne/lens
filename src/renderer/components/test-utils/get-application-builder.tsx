@@ -71,6 +71,9 @@ import currentLocationInjectable from "../../api/current-location.injectable";
 import lensProxyPortInjectable from "../../../main/lens-proxy/lens-proxy-port.injectable";
 import { runManyFor } from "../../../common/runnable/run-many-for";
 import { beforeQuitOfBackEndInjectionToken } from "../../../main/start-main-application/runnable-tokens/before-quit-of-back-end-injection-token";
+import allowedResourcesInjectable from "../../cluster-frame-context/allowed-resources.injectable";
+import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
+import { KubernetesCluster, LensKubernetesClusterStatus } from "../../../common/catalog-entities";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -203,8 +206,7 @@ export const getApplicationBuilder = () => {
     },
   }));
 
-  const allowedResourcesState = observable.array<KubeResource>();
-
+  const allowedResourcesState = observable.set<KubeResource>();
   const windowHelpers = new Map<string, { di: DiContainer; getRendered: () => RenderResult }>();
 
   const createElectronWindowFake: CreateElectronWindow = (configuration) => {
@@ -252,7 +254,6 @@ export const getApplicationBuilder = () => {
         }
 
         const history = windowDi.inject(historyInjectable);
-
         const render = renderFor(windowDi);
 
         rendered = render((
@@ -284,19 +285,36 @@ export const getApplicationBuilder = () => {
   const selectedNamespaces = observable.set<string>();
   const clusters = observable.map<ClusterId, Cluster>();
   const clusterId = "some-cluster-id";
+  const clusterEntity = new KubernetesCluster({
+    metadata: {
+      labels: {},
+      name: "some-context-name",
+      uid: clusterId,
+    },
+    spec: {
+      kubeconfigContext: "some-context-name",
+      kubeconfigPath: "/some-kube-config-path",
+    },
+    status: {
+      phase: LensKubernetesClusterStatus.DISCONNECTED,
+    },
+  });
 
   mainDi.override(getClusterByIdInjectable, () => (id) => clusters.get(id));
 
-  beforeWindowStartCallbacks.push((windowDi) => windowDi.override(getClusterByIdInjectable, () => (id) => clusters.get(id)));
-  beforeWindowStartCallbacks.push((windowDi) => windowDi.override(currentLocationInjectable, () => {
-    const port = mainDi.inject(lensProxyPortInjectable);
-
-    return {
+  beforeWindowStartCallbacks.push((windowDi) => {
+    windowDi.override(getClusterByIdInjectable, () => (id) => clusters.get(id));
+    windowDi.override(currentLocationInjectable, () => ({
       hostname: "localhost",
-      port: `${port.get()}`,
+      port: `${mainDi.inject(lensProxyPortInjectable).get()}`,
       protocol: "http",
-    };
-  }));
+    }));
+    windowDi.override(allowedResourcesInjectable, () => computed(() => allowedResourcesState));
+  });
+
+  afterWindowStartCallbacks.push((windowDi) => {
+    windowDi.inject(catalogEntityRegistryInjectable).updateItems([clusterEntity]);
+  });
 
   runInAction(() => {
     mainDi.register(getInjectable({
@@ -542,6 +560,7 @@ export const getApplicationBuilder = () => {
       builder.afterWindowStart(windowDi => {
         // Todo: get rid of global state.
         KubeObjectStore.defaultContext.set(windowDi.inject(clusterFrameContextInjectable));
+        windowDi.inject(catalogEntityRegistryInjectable).activeEntity = clusterEntity;
       });
 
       return builder;
@@ -579,29 +598,32 @@ export const getApplicationBuilder = () => {
 
       enable: (...extensions) => {
         builder.beforeWindowStart((windowDi) => {
-          const rendererExtensionInstances = extensions.map((options) =>
-            getExtensionFakeForRenderer(
-              windowDi,
-              options.id,
-              options.name,
-              options.rendererOptions || {},
-            ),
-          );
+          const enabledExtension = enableExtensionFor(windowDi, rendererExtensionsStateInjectable);
 
-          rendererExtensionInstances.forEach(
-            enableExtensionFor(windowDi, rendererExtensionsStateInjectable),
-          );
+          runInAction(() => {
+            for (const extension of extensions) {
+              enabledExtension(getExtensionFakeForRenderer(
+                windowDi,
+                extension.id,
+                extension.name,
+                extension.rendererOptions ?? {},
+              ));
+            }
+          });
         });
 
         builder.beforeApplicationStart((mainDi) => {
-          const mainExtensionInstances = extensions.map((extension) =>
-            getExtensionFakeForMain(mainDi, extension.id, extension.name, extension.mainOptions || {}),
-          );
+          const enabledExtension = enableExtensionFor(mainDi, mainExtensionsStateInjectable);
 
           runInAction(() => {
-            mainExtensionInstances.forEach(
-              enableExtensionFor(mainDi, mainExtensionsStateInjectable),
-            );
+            for (const extension of extensions) {
+              enabledExtension(getExtensionFakeForMain(
+                mainDi,
+                extension.id,
+                extension.name,
+                extension.mainOptions ?? {},
+              ));
+            }
           });
         });
       },
@@ -629,7 +651,7 @@ export const getApplicationBuilder = () => {
       environment.onAllowKubeResource();
 
       runInAction(() => {
-        allowedResourcesState.push(resourceName);
+        allowedResourcesState.add(resourceName);
       });
 
       return builder;
@@ -833,11 +855,8 @@ const enableExtensionFor = (
 ) => {
   const extensionState = di.inject(stateInjectable);
 
-  const getExtension = (extension: LensExtension) =>
-    di.inject(extensionInjectable, extension);
-
   return (extensionInstance: LensExtension) => {
-    const extension = getExtension(extensionInstance);
+    const extension = di.inject(extensionInjectable, extensionInstance);
 
     runInAction(() => {
       extension.register();
@@ -852,11 +871,7 @@ const disableExtensionFor =
     stateInjectable: Injectable<ObservableMap<string, any>, unknown, void>,
   ) =>
     (id: string) => {
-      const getExtension = (extension: LensExtension) =>
-        di.inject(extensionInjectable, extension);
-
       const extensionsState = di.inject(stateInjectable);
-
       const instance = extensionsState.get(id);
 
       if (!instance) {
@@ -865,11 +880,10 @@ const disableExtensionFor =
         );
       }
 
-      const injectable = getExtension(instance);
+      const extension = di.inject(extensionInjectable, instance);
 
       runInAction(() => {
-        injectable.deregister();
-
+        extension.deregister();
         extensionsState.delete(id);
       });
     };

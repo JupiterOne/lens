@@ -4,6 +4,9 @@ exports[`installing update when started renders 1`] = `
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -223,6 +226,9 @@ exports[`installing update when started renders 1`] = `
 exports[`installing update when started when user checks for updates renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >
@@ -444,6 +450,9 @@ exports[`installing update when started when user checks for updates when new up
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -663,6 +672,9 @@ exports[`installing update when started when user checks for updates when new up
 exports[`installing update when started when user checks for updates when new update is discovered when download fails renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >
@@ -906,6 +918,9 @@ exports[`installing update when started when user checks for updates when new up
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1147,6 +1162,9 @@ exports[`installing update when started when user checks for updates when new up
 exports[`installing update when started when user checks for updates when no new update is discovered renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >

@@ -3,6 +3,9 @@
 exports[`preferences - navigation to terminal preferences given in preferences, when rendered renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -692,6 +695,9 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
 exports[`preferences - navigation to terminal preferences given in preferences, when rendered when navigating to terminal preferences using navigation renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -1037,7 +1043,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
                         min="10"
                         spellcheck="false"
                         type="number"
-                        value="42"
+                        value="12"
                       />
                     </label>
                     <div
@@ -1076,13 +1082,16 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
                       class="Select__control css-1s2u09g-control"
                     >
                       <div
-                        class="Select__value-container css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--has-value css-319lph-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
-                          id="react-select-2-placeholder"
+                          class="Select__single-value css-qc6sy-singleValue"
                         >
-                          Select...
+                          <span
+                            style="font-family: RobotoMono; font-size: 12px;"
+                          >
+                            RobotoMono
+                          </span>
                         </div>
                         <div
                           class="Select__input-container css-6j8wv5-Input"
@@ -1090,7 +1099,6 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
                         >
                           <input
                             aria-autocomplete="list"
-                            aria-describedby="react-select-2-placeholder"
                             aria-expanded="false"
                             aria-haspopup="true"
                             autocapitalize="none"
