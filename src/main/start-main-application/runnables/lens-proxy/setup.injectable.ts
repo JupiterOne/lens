@@ -3,16 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { getAppVersionFromProxyServer } from "../../../common/utils";
-import exitAppInjectable from "../../electron-app/features/exit-app.injectable";
-import lensProxyInjectable from "../../lens-proxy/lens-proxy.injectable";
-import loggerInjectable from "../../../common/logger.injectable";
-import lensProxyPortInjectable from "../../lens-proxy/lens-proxy-port.injectable";
-import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
-import showErrorPopupInjectable from "../../electron-app/features/show-error-popup.injectable";
-import { beforeApplicationIsLoadingInjectionToken } from "../runnable-tokens/before-application-is-loading-injection-token";
-import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
-import initializeBuildVersionInjectable from "../../vars/build-version/init.injectable";
+import exitAppInjectable from "../../../electron-app/features/exit-app.injectable";
+import lensProxyInjectable from "../../../lens-proxy/lens-proxy.injectable";
+import loggerInjectable from "../../../../common/logger.injectable";
+import isWindowsInjectable from "../../../../common/vars/is-windows.injectable";
+import showErrorPopupInjectable from "../../../electron-app/features/show-error-popup.injectable";
+import { beforeApplicationIsLoadingInjectionToken } from "../../runnable-tokens/before-application-is-loading-injection-token";
+import buildVersionInjectable from "../../../vars/build-version/build-version.injectable";
+import requestAppVersionViaProxyInjectable from "./request-app-version.injectable";
 
 const setupLensProxyInjectable = getInjectable({
   id: "setup-lens-proxy",
@@ -21,7 +19,7 @@ const setupLensProxyInjectable = getInjectable({
     const lensProxy = di.inject(lensProxyInjectable);
     const exitApp = di.inject(exitAppInjectable);
     const logger = di.inject(loggerInjectable);
-    const lensProxyPort = di.inject(lensProxyPortInjectable);
+    const requestAppVersionViaProxy = di.inject(requestAppVersionViaProxyInjectable);
     const isWindows = di.inject(isWindowsInjectable);
     const showErrorPopup = di.inject(showErrorPopupInjectable);
     const buildVersion = di.inject(buildVersionInjectable);
@@ -41,9 +39,7 @@ const setupLensProxyInjectable = getInjectable({
         // test proxy connection
         try {
           logger.info("🔎 Testing LensProxy connection ...");
-          const versionFromProxy = await getAppVersionFromProxyServer(
-            lensProxyPort.get(),
-          );
+          const versionFromProxy = await requestAppVersionViaProxy();
 
           if (buildVersion.get() !== versionFromProxy) {
             logger.error("Proxy server responded with invalid response");
@@ -70,7 +66,6 @@ const setupLensProxyInjectable = getInjectable({
           return exitApp();
         }
       },
-      runAfter: di.inject(initializeBuildVersionInjectable),
     };
   },
 
