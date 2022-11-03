@@ -30,7 +30,7 @@ import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
 import getFilePathsInjectable from "../features/helm-charts/child-features/preferences/renderer/adding-of-custom-helm-repository/helm-file-input/get-file-paths.injectable";
 import callForPublicHelmRepositoriesInjectable from "../features/helm-charts/child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
 import platformInjectable from "../common/vars/platform.injectable";
-import startTopbarStateSyncInjectable from "./components/layout/top-bar/start-state-sync.injectable";
+import requestPublicHelmRepositoriesInjectablecomponents/layout/top-bar/start-state-sync.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import watchHistoryStateInjectable from "./remote-helpers/watch-history-state.injectable";
 import type { HotbarStore } from "../common/hotbars/store";
@@ -146,7 +146,7 @@ export const getDiForUnitTesting = (
       getFilePathsInjectable,
       callForPublicHelmRepositoriesInjectable,
     ]);
-
+requestPublicHelmRepositoriesInjectable
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     di.override(extensionsStoreInjectable, () => ({ isEnabled: ({ id, isBundled }) => false }) as ExtensionsStore);
 

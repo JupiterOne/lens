@@ -4,26 +4,29 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { sortBy } from "lodash/fp";
+import fetchInjectable from "../../../../../../../common/fetch/fetch.injectable";
 import type { HelmRepo } from "../../../../../../../common/helm/helm-repo";
-import { customRequestPromise } from "../../../../../../../common/request";
 
-const callForPublicHelmRepositoriesInjectable = getInjectable({
-  id: "call-for-public-helm-repositories",
+const publicHelmReposUrl = "https://github.com/lensapp/artifact-hub-repositories/releases/download/latest/repositories.json";
 
-  instantiate: () => async (): Promise<HelmRepo[]> => {
-    const res = await customRequestPromise({
-      uri: "https://github.com/lensapp/artifact-hub-repositories/releases/download/latest/repositories.json",
-      json: true,
-      resolveWithFullResponse: true,
-      timeout: 10000,
-    });
+const requestPublicHelmRepositoriesInjectable = getInjectable({
+  id: "request-public-helm-repositories",
 
-    const repositories = res.body as HelmRepo[];
+  instantiate: (di) => {
+    const fetch = di.inject(fetchInjectable);
 
-    return sortBy(repo => repo.name, repositories);
+    return async (): Promise<HelmRepo[]> => {
+      const res = await fetch(publicHelmReposUrl, {
+        timeout: 10_000,
+      });
+
+      const repositories = (await res.json()) as HelmRepo[];
+
+      return sortBy(repo => repo.name, repositories);
+    };
   },
 
   causesSideEffects: true,
 });
 
-export default callForPublicHelmRepositoriesInjectable;
+export default requestPublicHelmRepositoriesInjectable;

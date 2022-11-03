@@ -14,7 +14,7 @@ import execFileInjectable, { type ExecFile } from "../../common/fs/exec-file.inj
 import helmBinaryPathInjectable from "../../main/helm/helm-binary-path.injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import type { Logger } from "../../common/logger";
-import callForPublicHelmRepositoriesInjectable from "./child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
+import requestPublicHelmRepositoriesInjectable from "./child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
 import { noop } from "../../common/utils";
 
@@ -43,7 +43,7 @@ describe("listing active helm repositories in preferences", () => {
 
     builder.beforeApplicationStart((mainDi) => {
       mainDi.override(readYamlFileInjectable, () => readYamlFileMock);
-      mainDi.override(execFileInjectable, () => execFileMock);
+      mainDi.override(exrequestPublicHelmRepositoriesInjectable
       mainDi.override(helmBinaryPathInjectable, () => "some-helm-binary-path");
       mainDi.override(loggerInjectable, () => loggerStub);
     });
