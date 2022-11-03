@@ -5,7 +5,7 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import requestPublicHelmRepositoriesInjectable from "../helm-charts/child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
+import requestPublicHelmRepositoriesInjectable from "../helm-charts/child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/request-public-helm-repositories.injectable";
 import getActiveHelmRepositoriesInjectable from "../../main/helm/repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
 import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
 import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
@@ -30,11 +30,11 @@ describe("preferences - navigation to kubernetes preferences", () => {
         mainDi.override(
           getActiveHelmRepositoriesInjectable,
           () => async () => ({ callWasSuccessful: true, response: [] }),
-        );requestPublicHelmRepositoriesInjectable;
+        );
       });
 
       builder.beforeWindowStart((windowDi) => {
-        windowDi.override(callForPublicHelmRepositoriesInjectable, () => async () => []);
+        windowDi.override(requestPublicHelmRepositoriesInjectable, () => async () => []);
       });
 
       builder.beforeWindowStart(() => {

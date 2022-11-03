@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
-import requestPublicHelmRepositoriesInjectable from "./call-for-public-helm-repositories.injectable";
+import requestPublicHelmRepositoriesInjectable from "./request-public-helm-repositories.injectable";
 
 const publicHelmRepositoriesInjectable = getInjectable({
   id: "public-helm-repositories",
