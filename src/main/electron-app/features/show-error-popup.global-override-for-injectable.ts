@@ -6,6 +6,6 @@
 import { getGlobalOverride } from "../../../common/test-utils/get-global-override";
 import showErrorPopupInjectable from "./show-error-popup.injectable";
 
-export default getGlobalOverride(showErrorPopupInjectable, () => () => {
-  throw new Error("Tried to show an error popup without an override");
+export default getGlobalOverride(showErrorPopupInjectable, () => (heading, message) => {
+  throw new Error(`Tried to show an error popup without an override: ${JSON.stringify({ heading, message })}`);
 });

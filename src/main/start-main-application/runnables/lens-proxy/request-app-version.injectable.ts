@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { AbortSignal as NonStandardAbortSignal } from "abort-controller";
-import fetchInjectable from "../../../../common/fetch/fetch.injectable";
+import __UNSAFE_fetchInjectable from "../../../../common/fetch/unsafe-fetch.injectable";
 import lensProxyPortInjectable from "../../../lens-proxy/lens-proxy-port.injectable";
 
 export interface RequestOptions {
@@ -17,7 +17,7 @@ const requestAppVersionViaProxyInjectable = getInjectable({
   id: "request-app-version-via-proxy",
   instantiate: (di): RequestAppVersionViaProxy => {
     const lensProxyPort = di.inject(lensProxyPortInjectable);
-    const fetch = di.inject(fetchInjectable);
+    const fetch = di.inject(__UNSAFE_fetchInjectable);
 
     return async (options) => {
       const response = await fetch(`http://127.0.0.1:${lensProxyPort.get()}/version`, {
