@@ -69,11 +69,12 @@ import createClusterInjectable from "../../../main/create-cluster/create-cluster
 import { onLoadOfApplicationInjectionToken } from "../../../main/start-main-application/runnable-tokens/on-load-of-application-injection-token";
 import currentLocationInjectable from "../../api/current-location.injectable";
 import lensProxyPortInjectable from "../../../main/lens-proxy/lens-proxy-port.injectable";
-import { runManyFor } from "../../../common/runnable/run-many-for";
 import { beforeQuitOfBackEndInjectionToken } from "../../../main/start-main-application/runnable-tokens/before-quit-of-back-end-injection-token";
 import allowedResourcesInjectable from "../../cluster-frame-context/allowed-resources.injectable";
 import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
 import { KubernetesCluster, LensKubernetesClusterStatus } from "../../../common/catalog-entities";
+import { beforeQuitOfFrontEndInjectionToken } from "../../../main/start-main-application/runnable-tokens/before-quit-of-front-end-injection-token";
+import { runManySyncFor } from "../../../common/runnable/run-many-sync-for";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -703,9 +704,11 @@ export const getApplicationBuilder = () => {
     },
 
     quit() {
-      const runMany = runManyFor(builder.mainDi);
-      const beforeQuitOfBackEnd = runMany(beforeQuitOfBackEndInjectionToken);
+      const runManySync = runManySyncFor(builder.mainDi);
+      const beforeQuitOfFrontEnd = runManySync(beforeQuitOfFrontEndInjectionToken);
+      const beforeQuitOfBackEnd = runManySync(beforeQuitOfBackEndInjectionToken);
 
+      beforeQuitOfFrontEnd();
       beforeQuitOfBackEnd();
     },
 
