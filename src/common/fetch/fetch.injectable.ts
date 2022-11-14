@@ -4,13 +4,13 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { RequestInit, Response } from "node-fetch";
-import __UNSAFE_fetchInjectable from "./unsafe-fetch.injectable";
+import __UNSAFE_nodeFetchInjectable from "./unsafe-fetch.injectable";
 
 export type Fetch = (url: string, init?: RequestInit) => Promise<Response>;
 
 const fetchInjectable = getInjectable({
   id: "fetch",
-  instantiate: (di) => di.inject(__UNSAFE_fetchInjectable),
+  instantiate: (di): Fetch => di.inject(__UNSAFE_nodeFetchInjectable).default,
   causesSideEffects: true,
 });
 

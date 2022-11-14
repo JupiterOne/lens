@@ -5,6 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { sortBy } from "lodash/fp";
 import fetchInjectable from "../../../../../../../common/fetch/fetch.injectable";
+import { withTimeout } from "../../../../../../../common/fetch/timeout-controller";
 import type { HelmRepo } from "../../../../../../../common/helm/helm-repo";
 
 const publicHelmReposUrl = "https://github.com/lensapp/artifact-hub-repositories/releases/download/latest/repositories.json";
@@ -16,8 +17,9 @@ const requestPublicHelmRepositoriesInjectable = getInjectable({
     const fetch = di.inject(fetchInjectable);
 
     return async (): Promise<HelmRepo[]> => {
+      const controller = withTimeout(10_000);
       const res = await fetch(publicHelmReposUrl, {
-        timeout: 10_000,
+        signal: controller.signal,
       });
 
       const repositories = (await res.json()) as HelmRepo[];

@@ -274,6 +274,11 @@ export class Kubectl {
     this.dependencies.logger.info(`Downloading kubectl ${this.kubectlVersion} from ${this.url} to ${this.path}`);
 
     const response = await this.dependencies.fetch(this.url, { compress: true });
+
+    if (!response.body || response.status !== 200) {
+      throw new Error(`[KUBECTL]: failed to download ${this.kubectlVersion}: ${response.statusText}`);
+    }
+
     const fileWriteStream = this.dependencies.createWriteFileStream(this.path, { mode: 0o755 });
     const pipeline = promisify(stream.pipeline);
 
