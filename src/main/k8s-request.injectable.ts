@@ -6,11 +6,10 @@ import { apiKubePrefix } from "../common/vars";
 import type { Cluster } from "../common/cluster/cluster";
 import { getInjectable } from "@ogre-tools/injectable";
 import lensProxyPortInjectable from "./lens-proxy/lens-proxy-port.injectable";
-import type { RequestInit } from "node-fetch";
-import { Headers } from "node-fetch";
 import fetchInjectable from "../common/fetch/fetch.injectable";
+import { withTimeout } from "../common/fetch/timeout-controller";
 
-export type K8sRequest = (cluster: Cluster, path: string, options?: RequestInit) => Promise<unknown>;
+export type K8sRequest = (cluster: Cluster, path: string) => Promise<unknown>;
 
 const k8SRequestInjectable = getInjectable({
   id: "k8s-request",
@@ -19,18 +18,17 @@ const k8SRequestInjectable = getInjectable({
     const lensProxyPort = di.inject(lensProxyPortInjectable);
     const fetch = di.inject(fetchInjectable);
 
-    return async (cluster, path, options = {}) => {
+    return async (cluster, path) => {
       const kubeProxyUrl = `http://localhost:${lensProxyPort.get()}${apiKubePrefix}`;
-      const headers = new Headers(options.headers);
+      const controller = withTimeout(30_000);
 
-      options.timeout ??= 30000;
-
-      // used by getClusterForRequestInjectable
-      headers.set("Host", `${cluster.id}.${new URL(kubeProxyUrl).host}`);
-
-      options.headers = headers;
-
-      return fetch(kubeProxyUrl + path, options);
+      return fetch(kubeProxyUrl + path, {
+        headers: {
+          // used by getClusterForRequestInjectable
+          Host: `${cluster.id}.${new URL(kubeProxyUrl).host}`,
+        },
+        signal: controller.signal,
+      });
     };
   },
 });
