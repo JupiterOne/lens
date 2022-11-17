@@ -5,19 +5,19 @@
 
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import type { Cluster } from "../../../../common/cluster/cluster";
-import { Input } from "../../input";
-import { SubTitle } from "../../layout/sub-title";
-import type { ShowNotification } from "../../notifications";
-import { Icon } from "../../icon";
-import { PathPicker } from "../../path-picker";
-import { isWindows } from "../../../../common/vars";
+import type { Cluster } from "../../../common/cluster/cluster";
+import { Input } from "../input";
+import { SubTitle } from "../layout/sub-title";
+import type { ShowNotification } from "../notifications";
+import { Icon } from "../icon";
+import { PathPicker } from "../path-picker";
+import { isWindows } from "../../../common/vars";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
-import type { ValidateDirectory } from "../../../../common/fs/validate-directory.injectable";
-import validateDirectoryInjectable from "../../../../common/fs/validate-directory.injectable";
-import type { ResolveTilde } from "../../../../common/path/resolve-tilde.injectable";
-import resolveTildeInjectable from "../../../../common/path/resolve-tilde.injectable";
+import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
+import type { ValidateDirectory } from "../../../common/fs/validate-directory.injectable";
+import validateDirectoryInjectable from "../../../common/fs/validate-directory.injectable";
+import type { ResolveTilde } from "../../../common/path/resolve-tilde.injectable";
+import resolveTildeInjectable from "../../../common/path/resolve-tilde.injectable";
 
 export interface ClusterLocalTerminalSettingProps {
   cluster: Cluster;
