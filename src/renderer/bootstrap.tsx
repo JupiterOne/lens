@@ -100,9 +100,6 @@ export async function bootstrap(di: DiContainer) {
   logger.info(`${logPrefix} initializing EntitySettingsRegistry`);
   initializers.initEntitySettingsRegistry();
 
-  logger.info(`${logPrefix} initializing CatalogEntityDetailRegistry`);
-  initializers.initCatalogEntityDetailRegistry();
-
   logger.info(`${logPrefix} initializing CatalogCategoryRegistryEntries`);
   initializers.initCatalogCategoryRegistryEntries({
     navigateToAddCluster: di.inject(navigateToAddClusterInjectable),
